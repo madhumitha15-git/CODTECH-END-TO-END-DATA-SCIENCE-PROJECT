@@ -1,0 +1,13 @@
+Predictive-Maintenance-RUL-API
+
+│
+├── backend/
+│   └── app.py
+│
+├── models/
+│   └── rul_model.pkl
+│
+├── notebook.ipynb
+├── requirements.txt
+├── README.md
+└── screenshots/
