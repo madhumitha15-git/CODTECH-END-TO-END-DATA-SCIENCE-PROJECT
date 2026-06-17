@@ -1,34 +1,40 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-import joblib
+import streamlit as st
+import requests
 
 
-app = FastAPI()
+st.title("AI Predictive Maintenance System")
 
 
-model = joblib.load(
-r"C:\Users\tange\Downloads\CODTECH\.ipynb_checkpoints\TASK3-END-TO-END DATA SCIENCE PROJECT\models\rul_model.pkl"
-)
+st.write("Enter Engine Sensor Data")
 
 
-class EngineData(BaseModel):
-    values: list
+values=[]
 
 
-@app.get("/")
-def home():
-    return {
-        "message":"Predictive Maintenance API"
-    }
+for i in range(26):
 
-
-@app.post("/predict")
-def predict(data: EngineData):
-
-    prediction = model.predict(
-        [data.values]
+    value=st.number_input(
+        f"Feature {i+1}",
+        value=0.0
     )
 
-    return {
-        "Remaining_Life": float(prediction[0])
-    }
+    values.append(value)
+
+
+
+if st.button("Predict"):
+
+    response=requests.post(
+        "http://127.0.0.1:8000/predict",
+        json={
+            "values":values
+        }
+    )
+
+
+    result=response.json()
+
+
+    st.success(
+        f"Remaining Life: {result['Remaining_Life']} cycles"
+    )
